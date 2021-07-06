@@ -33,18 +33,22 @@ A password generator inspired by XKCD #936 and EFF Diceware wordlist
                             % DEFAULT_PASSWORD_LEN)
     parser.add_argument("-f", "--wordlist",
                         default=DEFAULT_WORDLIST,
-                        help="Diceware wordlist to use (default: %s)" % DEFAULT_WORDLIST)
+                        help="Diceware or UNIX wordlist to use (default: %s)" % DEFAULT_WORDLIST)
     parser.add_argument("-b", "--brief", action="store_true",
                         help="do not output password metric")
     return parser.parse_args()
 
 ##------------------------------------------------------------------------------
 def load(path):
-    ## TODO: Add support for UNIX words in addition to current Diceware format
+    ## Accept:
     ##  - Diceware format /^[1-6]+\s+\w+$/
     ##  - UNIX words format /^\w+$/
     with open(path) as f:
-        words = [line.strip().split()[1] for line in f]
+        words = []
+        for line in f:
+            tokens = line.strip().split()
+            word = tokens[1] if len(tokens) == 2 else tokens[0]
+            words.append(word)
     return words
 
 ##------------------------------------------------------------------------------
